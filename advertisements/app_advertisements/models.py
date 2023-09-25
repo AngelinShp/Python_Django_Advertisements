@@ -24,6 +24,13 @@ class Advertisement(models.Model):
                                '{}</span>', created_time)
         return self.created_at.strftime("%d.%m.%Y в %H:%M:%S")
 
+    @admin.display(description='Дата обновления')
+    def updated_date(self):
+        if self.updated_at.date()==timezone.now().date():
+            updated_time=self.updated_at.time().strftime("%H:%M:%S")
+            return format_html('<span style="color: green; font-weight: bold">Сегодня в {}</span>', updated_time)
+        return self.updated_at.strftime("%d.%m.%Y в %H:%M:%S")
+
 
 
     def __str__(self):
