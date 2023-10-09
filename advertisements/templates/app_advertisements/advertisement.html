@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-  <link href="css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/fontello.css">
-  <title>Advertisement</title>
-</head>
+{% block title %}
+Объявление
+{% endblock %}
 
-<body>
+{% block content %}
 <ul class="nav nav-pills sticky-top bg-white nav-fill">
   <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="{% url 'main_page' %}">
+    <a class="nav-link" aria-current="page" href="{% url 'main_page' %}">
       <span style="font-weight: bold;">Главная</span>
     </a>
   </li>
@@ -22,66 +16,62 @@
     <a class="nav-link" href="{% url 'top_sellers' %}"><span style="font-weight: bold;">Топ продавцов</span>
     </a>
   </li>
-    <li class="nav-item">
-      <a class="nav-link" href="advertisement-post.html">
-        <span style="font-weight: bold;">Разместить объявление</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="register.html">
-        <span style="font-weight: bold;">Регистрация</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="login.html">
-        <span style="font-weight: bold;">Войти</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="profile.html">
-        <span style="font-weight: bold;">Профиль</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">
-        <span style="font-weight: bold;">Выйти</span>
-      </a>
-    </li>
-  </ul>
-
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'adv_post' %}">
+      <span style="font-weight: bold;">Разместить объявление</span>
+    </a>
+  </li>
+  {% if not user.is_authenticated %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'register' %}">
+      <span style="font-weight: bold;">Регистрация</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'login' %}">
+      <span style="font-weight: bold;">Войти</span>
+    </a>
+  </li>
+  {% else %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'profile' %}">
+      <span style="font-weight: bold;">Профиль</span>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'logout' %}">
+      <span style="font-weight: bold;">Выйти</span>
+    </a>
+  </li>
+  {% endif %}
+</ul>
   <div class="container" style="margin: 50px;">
     <div class="display-2">
-      <span class="badge bg-primary">Объявление пользователя "username"</span>
+      <span class="badge bg-primary">Объявление пользователя {{ advertisements.user }}</span>
     </div>
   </div>
-  <div class="col offset-2">
+  <div class="col">
     <div class="card mb-2" style="max-width: 1200px; margin-top: 20px;">
       <div class="row g-0">
-        <div class="col-md-4">
-          <a href="#" class="nav-link">
-            <img src="img/adv.png" class="img-fluid rounded-start" alt="Card title">
-          </a>
+       <div class="col-md-4">
+
+            <img src="{% if advertisements.image %} {{ advertisements.image.url }} {% else %} {% static 'img/pict.png' %} {% endif %}" class="img-fluid rounded-start" alt="Card title">
+
         </div>
-        <div class="col">
+        <div class="col-md-8">
           <div class="card-body">
             <h5 class="card-title">
-              <a href="#" class="nav-link"><strong>Продам гараж</strong></a>
+              <a href="{{ adv.get_absolute_url }}" class="nav-link"><strong>{{ advertisements.title }}</strong></a>
             </h5>
-            <p class="card-text">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit eum aut commodi dolores
-              praesentium fugiat! Maxime perspiciatis iste, voluptas tenetur voluptatem at beatae, aliquid
-              libero odit ab accusamus tempore assumenda.
-              Hic asperiores pariatur recusandae sapiente doloremque illo laudantium placeat sed fugit!
-              Dolorem nulla quaerat doloremque odit impedit unde esse dolorum tenetur quos error! Iure
-              quas, illo expedita sed suscipit ullam.
-              Illo quam odio, quas laborum natus error doloremque totam maiores dolorum fugit aliquam, sit
-              numquam impedit praesentium facilis amet perspiciatis facere rem magnam consectetur, nobis
-              est. Qui quod fuga illum.
-            </p>
-            <span>Автор: "username"</span>
-            <p class="card-text"><small class="text-muted">Размещено: "дата"</small></p>
+            <a href="{{ adv.get_absolute_url }}" class="nav-link">
+              <p class="card-text">{{ advertisements.description }}</p>
+              <span>Автор: {{ advertisements.user }}</span>
+              <p class="card-text"><small class="text-muted">Размещено: {{ advertisements.created_date }}</small></p>
+            <span>Цена: {{ advertisements.price }} руб.</span>
+            </a>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -116,7 +106,4 @@
       </div>
     </nav>
   </footer>
-  <script src="js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+{% endblock %}
